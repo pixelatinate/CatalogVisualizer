@@ -37,14 +37,29 @@ $(document).ready(function () {
 
     // Write the dropdown box options, display classes of first possible catalog
     for(var catalogs in data) {
+        console.log(data[catalogs]);
+        console.log(data[catalogs]['all_courses']);
         $("#dropDownWrite").append('<option value="' + catalogs + '">' + catalogs + '</option>'); 
+        $("#dropDownWrite2").append('<option value="' + data[catalogs]['all_courses'] + '">' + data[catalogs]['all_courses'] + '</option>'); 
+        /*
+        for( var classes in data['catalog']['terms'][semesters]){
+            console.log(data);
+        }
+        */
     }
-
     catalogClicked();
+    
+    
+    /*
+    for ( var semesters in data['catalog']['terms']){
+        for( var classes in data['catalog']['terms'][semesters]){
+            $("#dropDownWrite2").append('<option value="' + classes + '">' + classes + '</option>'); 
+        }
+    }
+    */
     
 });
 
-// Dropdown menu kind of works- next step is only writing the applicable catalog to the page
 function catalogClicked(){
     let catalog = $("#dropDownWrite").val()
 
@@ -69,6 +84,7 @@ function catalogClicked(){
             htmlString += '<div class="cell"><div class="box"><span class="span" id="close">x</span></div></div>';
             classes = Number(classes) + 1;
         }
+        
         // htmlString += '<br><div style="padding:30px"></div' ;
     }
     
@@ -91,6 +107,15 @@ function catalogClicked(){
         items[i].addEventListener('dragover', handleDragOver);
         items[i].addEventListener('drop', handleDrop);
     }
+    
+    /*
+    for(let i = 0; i < items.length; i++) {
+        if(items[i].innerText == "") {
+            console.log("test1");
+            items[i].style.visibility = "hidden";
+        }
+    }
+    */
     
     // Now draw the req lines
     // Clear out any req lines
@@ -237,6 +262,75 @@ function drawArrows(req_matrix, prereq) {
     //     all_lines[i].startPlugColor = colors[i % colors.length];
     //     all_lines[i].endPlugColor = colors[i % colors.length];
     // }
+}
+
+function highlightClasses() {
+    let boxes = document.getElementsByClassName('box')
+
+    boxes.forEach(element => {
+    element.addEventListener('click', () => {
+        const line = new LeaderLine(element, { color: 'red', size: 5 });
+        line.show();
+    });
+    });
+    
+    /*
+    // Now lets actually go through and draw all the arrows
+    // To do this, we need to add ids to all the box divs
+    for(let i = 0; i < boxes.length; i++) {
+        boxes[i].id = "box" + i;
+    }
+
+    let from_box = "";
+    let all_lines = [];
+    for(let i = 0; i < req_matrix.length; i++) {
+        from_box = 'box' + i;
+        for(let j = 0; j < req_matrix.length; j++) {
+            if(req_matrix[j][i]) {
+                let to_box = "box" + j;
+
+                // Line style changes based on if it's a prereq or coreq
+                let line = null;
+                if(prereq) {
+                    line = new LeaderLine(
+                        document.getElementById(from_box),
+                        document.getElementById(to_box),
+                        {
+                            path: "grid",
+                            startSocket: "bottom",
+                            endSocket: "top",
+                            outline: true,
+                            color: "fff",
+                            endPlugOutline: true,
+                            endPlugSize: 1.5
+                        }
+                    );
+                } else {
+                    line = new LeaderLine(
+                        document.getElementById(from_box),
+                        document.getElementById(to_box),
+                        {
+                            path: "grid",
+                            color: "black",
+                            startPlug: "behind",
+                            endPlug: "behind",
+                            dash: true,
+                            endPlugSize: 0
+                        }
+                    );
+                }
+                all_lines.push(line);
+            }
+        }
+    }
+
+    // let colors = ["aqua", "blue", "blueviolet", "brown", "cadetblue", "coral", "cyan", "darkgoldenrod", "deeppink", "greenyellow", "green", "lightpink", "palegreen", "steelblue", "wheat", "slategray", "silver", "plum"]
+    // for(let i = 0; i < all_lines.length; i++) {
+    //     all_lines[i].outlineColor = colors[i % colors.length];
+    //     all_lines[i].startPlugColor = colors[i % colors.length];
+    //     all_lines[i].endPlugColor = colors[i % colors.length];
+    // }
+    */
 }
 
 
